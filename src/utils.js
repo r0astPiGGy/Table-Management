@@ -1,6 +1,6 @@
 
 export function round(number) {
-    return +((+number).toFixed(2))
+    return +number.toFixed(2)
 }
 
 export function roundNumberFieldsIn(object) {

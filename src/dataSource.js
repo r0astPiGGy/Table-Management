@@ -10,6 +10,18 @@ function predicate(companyModel) {
     return isNotEmpty(companyModel.company) && isNotEmpty(companyModel.product) && companyModel.count >= 0
 }
 
+function getAmountToPricePairs() {
+    return Object.keys(PRODUCT_PRICES).map(key => [amountKeyOf(key), priceKeyOf(key)])
+}
+
+export function getHeaders() {
+    return [
+        COMPANY_NAME_KEY,
+        ...getAmountToPricePairs().flat(),
+        PRICE_TOTAL_KEY
+    ]
+}
+
 export function fetchCompanyData(amount = DATA_AMOUNT) {
     const priceList = PRODUCT_PRICES
     const records = generateData(amount).filter(predicate)
@@ -20,13 +32,12 @@ export function fetchCompanyData(amount = DATA_AMOUNT) {
         const company = {}
 
         company[COMPANY_NAME_KEY] = companyId
+        company[PRICE_TOTAL_KEY] = 0
 
         Object.keys(priceList).forEach(productId => {
             company[amountKeyOf(productId)] = 0
             company[priceKeyOf(productId)] = 0
         })
-
-        company[PRICE_TOTAL_KEY] = 0
 
         acc[companyId] = company
         return acc

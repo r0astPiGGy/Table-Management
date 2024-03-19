@@ -8,7 +8,7 @@ function start() {
 }
 
 function onViewStateUpdated(state) {
-
+    console.log(state)
 }
 
 start()

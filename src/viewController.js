@@ -1,16 +1,16 @@
-import {ITEMS_PER_PAGE} from "./const.js";
-import {fetchCompanyData} from "./dataSource.js";
+import {DEFAULT_ITEMS_PER_PAGE, ITEMS_PER_PAGE} from "./const.js";
+import {fetchCompanyData, getHeaders} from "./dataSource.js";
 import {roundNumberFieldsIn} from "./utils.js";
 
-function viewStateOf(data = []) {
+const ViewState = function() {
     return {
-        data: data,
+        data: [],
         headers: [],
         page: 0,
         pages: 0,
-        perPage: 0,
+        perPage: DEFAULT_ITEMS_PER_PAGE,
         perPageList: ITEMS_PER_PAGE,
-        query: null
+        searchQuery: null
     }
 }
 
@@ -33,8 +33,36 @@ export const ViewController = function () {
 
     function fetchData() {
         cachedData = fetchCompanyData()
-        cachedData.forEach(roundNumberFieldsIn)
-        console.table(cachedData)
+        cachedData.forEach(it => roundNumberFieldsIn(it))
+
+        state = ViewState()
+        state.headers = getHeaders()
+        updatePagination(DEFAULT_ITEMS_PER_PAGE)
+        updateData()
+
+        fireViewStateUpdatedEvent()
+    }
+
+    function updatePagination(perPage) {
+        state.page = 0
+        state.pages = Math.floor(cachedData.length / perPage)
+        state.perPage = perPage
+    }
+
+    function updateData() {
+        state.data = includeMetrics(paginateData(cachedData))
+    }
+
+    function paginateData(data) {
+        const offset = state.page * state.perPage
+
+        return data.slice(offset, offset + state.perPage)
+    }
+
+    function includeMetrics(data) {
+        return [
+            ...data,
+        ]
     }
 
     function onHeaderClicked(headerId) {
@@ -42,19 +70,34 @@ export const ViewController = function () {
     }
 
     function onNextPageClicked() {
-
+        setPage(state.page + 1)
     }
 
     function onPreviousPageClicked() {
+        setPage(state.page - 1)
+    }
 
+    function setPage(page) {
+        if (page < 0 || page > state.pages) return
+
+        state.page = page
+        updateData()
+        fireViewStateUpdatedEvent()
     }
 
     function onPaginationValueChanged(value) {
+        if (state.perPage === value) return
 
+        updatePagination(value)
+        updateData()
+
+        fireViewStateUpdatedEvent()
     }
 
     function onNameFilterValueChanged(value) {
+        if (state.searchQuery === value) return
 
+        fireViewStateUpdatedEvent()
     }
 
     return {
@@ -64,5 +107,6 @@ export const ViewController = function () {
         onNextPageClicked: onNextPageClicked,
         onPreviousPageClicked: onPreviousPageClicked,
         onPaginationValueChanged: onPaginationValueChanged,
+        onNameFilterValueChanged: onNameFilterValueChanged
     }
 }
