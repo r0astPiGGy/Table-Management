@@ -1,4 +1,6 @@
-import { ITEMS_PER_PAGE } from "./Model.js";
+import {ITEMS_PER_PAGE} from "./const.js";
+import {fetchCompanyData} from "./dataSource.js";
+import {roundNumberFieldsIn} from "./utils.js";
 
 function viewStateOf(data = []) {
     return {
@@ -7,27 +9,32 @@ function viewStateOf(data = []) {
         page: 0,
         pages: 0,
         perPage: 0,
-        perPageList: ITEMS_PER_PAGE
+        perPageList: ITEMS_PER_PAGE,
+        query: null
     }
 }
 
-export const ViewModel = function() {
+export const ViewController = function () {
 
-    let viewState = null
-    let viewStateUpdatedListener = null
+    let state = null
+    let stateUpdatedListener = null
+
+    let cachedData = []
 
     function setViewStateUpdatedListener(listener) {
-        viewStateUpdatedListener = listener
+        stateUpdatedListener = listener
     }
 
     function fireViewStateUpdatedEvent() {
-        if (viewStateUpdatedListener === null) return
+        if (stateUpdatedListener === null) return
 
-        viewStateUpdatedListener(viewState)
+        stateUpdatedListener(state)
     }
 
     function fetchData() {
-
+        cachedData = fetchCompanyData()
+        cachedData.forEach(roundNumberFieldsIn)
+        console.table(cachedData)
     }
 
     function onHeaderClicked(headerId) {
@@ -43,6 +50,10 @@ export const ViewModel = function() {
     }
 
     function onPaginationValueChanged(value) {
+
+    }
+
+    function onNameFilterValueChanged(value) {
 
     }
 
