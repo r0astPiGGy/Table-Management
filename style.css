@@ -7,12 +7,43 @@ td {
     border: black 1px solid;
 }
 
+th, td {
+    font-size: 12px;
+}
+
+th {
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .controls {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+.header-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sort-indicator::before {
+    display: inline-block;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.sort-indicator.ascending::before {
+    font: var(--fa-font-solid);
+    content: '\f0d8';
+}
+
+.sort-indicator.descending::before {
+    font: var(--fa-font-solid);
+    content: '\f0d7';
 }
 
 .spacer {

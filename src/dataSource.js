@@ -1,4 +1,4 @@
-import {amountKeyOf, priceKeyOf, COMPANY_NAME_KEY, DATA_AMOUNT, PRICE_TOTAL_KEY} from "./const.js";
+import {amountKeyOf, priceKeyOf, COMPANY_NAME_KEY, DATA_AMOUNT, TOTAL_PRICE_KEY, TOTAL_PRODUCTS_KEY} from "./const.js";
 import {generateData, PRODUCT_PRICES} from "./generate.js";
 import {distinct} from "./utils.js";
 
@@ -18,7 +18,8 @@ export function getHeaders() {
     return [
         COMPANY_NAME_KEY,
         ...getAmountToPricePairs().flat(),
-        PRICE_TOTAL_KEY
+        TOTAL_PRICE_KEY,
+        TOTAL_PRODUCTS_KEY
     ]
 }
 
@@ -32,7 +33,8 @@ export function fetchCompanyData(amount = DATA_AMOUNT) {
         const company = {}
 
         company[COMPANY_NAME_KEY] = companyId
-        company[PRICE_TOTAL_KEY] = 0
+        company[TOTAL_PRICE_KEY] = 0
+        company[TOTAL_PRODUCTS_KEY] = 0
 
         Object.keys(priceList).forEach(productId => {
             company[amountKeyOf(productId)] = 0
@@ -53,7 +55,8 @@ export function fetchCompanyData(amount = DATA_AMOUNT) {
             const price = amount * priceList[productId]
 
             company[priceKeyOf(productId)] = price
-            company[PRICE_TOTAL_KEY] += price
+            company[TOTAL_PRODUCTS_KEY] += amount
+            company[TOTAL_PRICE_KEY] += price
         })
     })
 
