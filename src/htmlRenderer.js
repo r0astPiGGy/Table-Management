@@ -114,12 +114,16 @@ function updateTable(state) {
         return el
     }
 
+    const tbody = document.createElement("tbody")
+
     tableView.innerHTML = ""
     tableView.appendChild(createHeaderRow())
 
     state.data.forEach(company => {
-        tableView.appendChild(createRow(company))
+        tbody.appendChild(createRow(company))
     })
+
+    tableView.appendChild(tbody)
 }
 
 function updateSearchView(searchQuery) {

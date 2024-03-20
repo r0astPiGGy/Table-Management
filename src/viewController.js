@@ -141,7 +141,7 @@ export const ViewController = function () {
     function onPaginationValueChanged(value) {
         if (state.perPage === value) return
 
-        updatePagination(state.data, value)
+        updatePagination(filteredData, value)
         updateData()
 
         fireViewStateUpdatedEvent()

@@ -1,18 +1,38 @@
 * {
+    padding: 0;
+    margin: 0;
     border-collapse: collapse;
     box-sizing: border-box;
-}
-
-td {
-    border: black 1px solid;
-}
-
-th, td {
+    font-family: 'Inter', sans-serif;
     font-size: 12px;
+    color: #e5e5e5;
+}
+
+body {
+    background: #282828;
+}
+
+#table {
+    border-radius: 8px;
+    background: #484848;
+}
+
+tr {
+    border-top: #676767 1px solid;
+    border-bottom: #676767 1px solid;
+}
+
+tr:hover {
+    background: #545454;
+}
+
+td,th {
+    padding: 8px 16px;
 }
 
 th {
-    font-weight: bold;
+    /*letter-spacing: 0;*/
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -28,6 +48,7 @@ th {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 4px;
 }
 
 .sort-indicator::before {
