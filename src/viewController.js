@@ -1,6 +1,6 @@
 import {COMPANY_NAME_KEY, DEFAULT_ITEMS_PER_PAGE, ITEMS_PER_PAGE, SortMode, sortModes} from "./const.js";
 import {fetchCompanyData, getAllHeaders, getMetricsHeaders} from "./dataSource.js";
-import {roundNumberFieldsIn} from "./utils.js";
+import {calculateAverage, calculateMaximum, calculateMedian, calculateTotal} from "./metrics.js";
 
 const ViewState = function() {
     return {
@@ -42,8 +42,6 @@ export const ViewController = function () {
 
     function fetchData() {
         cachedData = fetchCompanyData()
-        cachedData.forEach(it => roundNumberFieldsIn(it))
-
         filteredData = cachedData
 
         state = ViewState()
@@ -69,6 +67,11 @@ export const ViewController = function () {
     function includeMetrics(data) {
         return [
             ...data,
+            // Метрики были взяты с текущей страницы, а не со всех
+            calculateTotal(data, metricsHeaders),
+            calculateMaximum(data, metricsHeaders),
+            calculateAverage(data, metricsHeaders),
+            calculateMedian(data, metricsHeaders),
         ]
     }
 

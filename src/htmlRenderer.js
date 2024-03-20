@@ -1,5 +1,5 @@
 import {ViewController} from "./viewController.js";
-import {SortMode} from "./const.js";
+import {tryRoundNumber} from "./utils.js";
 
 const perPageSelector = document.querySelector("#page-list")
 const nextPageButton = document.querySelector("#next-page")
@@ -119,7 +119,7 @@ function updateTable(state) {
 
         state.headers.forEach(header => {
             const td = document.createElement("td")
-            td.innerText = company[header]
+            td.innerText = tryRoundNumber(company[header])
             el.appendChild(td)
         })
 
