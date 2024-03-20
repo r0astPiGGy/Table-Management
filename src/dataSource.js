@@ -66,5 +66,5 @@ export function fetchCompanyData(amount = DATA_AMOUNT) {
         })
     })
 
-    return Object.values(mappedCompanies)
+    return Object.values(mappedCompanies).filter(it => it[TOTAL_PRICE_KEY] > 0)
 }
