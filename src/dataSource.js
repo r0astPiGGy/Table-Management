@@ -14,12 +14,18 @@ function getAmountToPricePairs() {
     return Object.keys(PRODUCT_PRICES).map(key => [amountKeyOf(key), priceKeyOf(key)])
 }
 
-export function getHeaders() {
+export function getMetricsHeaders() {
     return [
-        COMPANY_NAME_KEY,
         ...getAmountToPricePairs().flat(),
         TOTAL_PRICE_KEY,
         TOTAL_PRODUCTS_KEY
+    ]
+}
+
+export function getAllHeaders() {
+    return [
+        COMPANY_NAME_KEY,
+        ...getMetricsHeaders()
     ]
 }
 

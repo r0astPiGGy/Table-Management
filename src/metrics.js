@@ -2,18 +2,18 @@ function aggregate() {
 
 }
 
-export function total() {
+export function calculateTotal() {
 
 }
 
-export function max() {
+export function calculateMaximum() {
 
 }
 
-export function average() {
+export function calculateAverage() {
 
 }
 
-export function median() {
+export function calculateMedian() {
 
 }

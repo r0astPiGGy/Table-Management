@@ -11,18 +11,18 @@
 </head>
 <body>
 
+<input id="search-bar" type="text" style="display: none">
+
 <div id="container">
-    <i class="fa-solid fa-caret-up"></i>
-    <i class="fa-solid fa-caret-down"></i>
-    <i class="fa-solid fa-chevron-right"></i>
-    <i class="fa-solid fa-chevron-left"></i>
-    <input id="search-bar" type="text" style="display: none">
-    <table id="table"></table>
-    <div class="controls">
-        <button id="previous-page">Предыдущая страница</button>
-        <select id="page-list">
-        </select>
-        <button id="next-page">Следующая страница</button>
+    <div id="table-wrapper">
+        <table id="table"></table>
+        <div class="controls">
+            <p>На странице:</p>
+            <select id="page-list">
+            </select>
+            <div id="previous-page" class="page-button left"></div>
+            <div id="next-page" class="page-button right"></div>
+        </div>
     </div>
 </div>
 

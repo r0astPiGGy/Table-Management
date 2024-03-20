@@ -60,8 +60,20 @@ function updatePerPageSelector(perPageList, selected) {
 }
 
 function updatePageButtons(page, maxPages) {
-    previousPageButton.disabled = page === 0
-    nextPageButton.disabled = page === maxPages
+    setEnabled(previousPageButton, page !== 0)
+    setEnabled(nextPageButton, page !== maxPages)
+}
+
+function setEnabled(element, enable) {
+    if (enable) {
+        if (element.classList.contains("disabled")) {
+            element.classList.remove("disabled")
+        }
+    } else {
+        if (!element.classList.contains("disabled")) {
+            element.classList.add("disabled")
+        }
+    }
 }
 
 function createHeader(headerId, state) {

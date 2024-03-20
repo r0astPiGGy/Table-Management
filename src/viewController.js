@@ -1,5 +1,5 @@
 import {COMPANY_NAME_KEY, DEFAULT_ITEMS_PER_PAGE, ITEMS_PER_PAGE, SortMode, sortModes} from "./const.js";
-import {fetchCompanyData, getHeaders} from "./dataSource.js";
+import {fetchCompanyData, getAllHeaders, getMetricsHeaders} from "./dataSource.js";
 import {roundNumberFieldsIn} from "./utils.js";
 
 const ViewState = function() {
@@ -28,6 +28,8 @@ export const ViewController = function () {
     let cachedData = []
     let filteredData = []
 
+    let metricsHeaders = []
+
     function setViewStateUpdatedListener(listener) {
         stateUpdatedListener = listener
     }
@@ -45,7 +47,8 @@ export const ViewController = function () {
         filteredData = cachedData
 
         state = ViewState()
-        state.headers = getHeaders()
+        state.headers = getAllHeaders()
+        metricsHeaders = getMetricsHeaders()
 
         updatePagination(filteredData, DEFAULT_ITEMS_PER_PAGE)
         updateData()
