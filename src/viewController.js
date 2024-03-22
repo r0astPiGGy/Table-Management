@@ -1,5 +1,5 @@
 import {COMPANY_NAME_KEY, DEFAULT_ITEMS_PER_PAGE, ITEMS_PER_PAGE, SortMode, sortModes} from "./const.js";
-import {fetchCompanyData, getAllHeaders, getMetricsHeaders} from "./dataSource.js";
+import {fetchCompanyData} from "./dataSource.js";
 import {calculateAverage, calculateMaximum, calculateMedian, calculateTotal} from "./metrics.js";
 
 const ViewState = function() {
@@ -41,12 +41,14 @@ export const ViewController = function () {
     }
 
     function fetchData() {
-        cachedData = fetchCompanyData()
+        const data = fetchCompanyData()
+
+        cachedData = data.companies
         filteredData = cachedData
 
         state = ViewState()
-        state.headers = getAllHeaders()
-        metricsHeaders = getMetricsHeaders()
+        state.headers = data.allHeaders
+        metricsHeaders = data.metricHeaders
 
         updatePagination(filteredData, DEFAULT_ITEMS_PER_PAGE)
         updateData()

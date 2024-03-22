@@ -2,38 +2,34 @@ import {amountKeyOf, priceKeyOf, COMPANY_NAME_KEY, DATA_AMOUNT, TOTAL_PRICE_KEY,
 import {generateData, PRODUCT_PRICES} from "./generate.js";
 import {distinct} from "./utils.js";
 
-function isNotEmpty(str) {
-    return str !== ""
+function getAmountToPricePairs(productKeys) {
+    return productKeys.map(key => [amountKeyOf(key), priceKeyOf(key)])
 }
 
-function predicate(companyModel) {
-    return isNotEmpty(companyModel.company) && isNotEmpty(companyModel.product) && companyModel.count >= 0
-}
-
-function getAmountToPricePairs() {
-    return Object.keys(PRODUCT_PRICES).map(key => [amountKeyOf(key), priceKeyOf(key)])
-}
-
-export function getMetricsHeaders() {
+function getMetricsHeaders(productKeys) {
     return [
-        ...getAmountToPricePairs().flat(),
+        ...getAmountToPricePairs(productKeys).flat(),
         TOTAL_PRICE_KEY,
         TOTAL_PRODUCTS_KEY
     ]
 }
 
-export function getAllHeaders() {
+function getAllHeaders(productKeys) {
     return [
         COMPANY_NAME_KEY,
-        ...getMetricsHeaders()
+        ...getMetricsHeaders(productKeys)
     ]
 }
 
 export function fetchCompanyData(amount = DATA_AMOUNT) {
     const priceList = PRODUCT_PRICES
-    const records = generateData(amount).filter(predicate)
+    const records = generateData(amount)
+        .filter(it => it.company !== "")
+        .filter(it => it.product !== "")
+        .filter(it => it.count > 0)
 
     const companyIds = distinct(records.map(it => it.company))
+    const productIds = distinct(records.map(it => it.product))
 
     const mappedCompanies = companyIds.reduce((acc, companyId) => {
         const company = {}
@@ -42,7 +38,7 @@ export function fetchCompanyData(amount = DATA_AMOUNT) {
         company[TOTAL_PRICE_KEY] = 0
         company[TOTAL_PRODUCTS_KEY] = 0
 
-        Object.keys(priceList).forEach(productId => {
+        productIds.forEach(productId => {
             company[amountKeyOf(productId)] = 0
             company[priceKeyOf(productId)] = 0
         })
@@ -55,8 +51,10 @@ export function fetchCompanyData(amount = DATA_AMOUNT) {
         mappedCompanies[record.company][amountKeyOf(record.product)] = record.count
     })
 
-    Object.values(mappedCompanies).forEach(company => {
-        Object.keys(priceList).forEach(productId => {
+    const companies = Object.values(mappedCompanies)
+
+    companies.forEach(company => {
+        productIds.forEach(productId => {
             const amount = company[amountKeyOf(productId)]
             const price = amount * priceList[productId]
 
@@ -66,5 +64,9 @@ export function fetchCompanyData(amount = DATA_AMOUNT) {
         })
     })
 
-    return Object.values(mappedCompanies).filter(it => it[TOTAL_PRICE_KEY] > 0)
+    return {
+        metricHeaders: getMetricsHeaders(productIds),
+        allHeaders: getAllHeaders(productIds),
+        companies: companies
+    }
 }
